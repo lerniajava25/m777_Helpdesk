@@ -1,0 +1,39 @@
+
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Mina ärenden</title>
+</head>
+<body>
+
+<h1>Supportärenden</h1>
+
+<a th:href="@{/tickets/new}">Skapa nytt ärende</a>
+
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Titel</th>
+        <th>Status</th>
+        <th>Detaljer</th>
+    </tr>
+
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.id}"></td>
+        <td th:text="${ticket.title}"></td>
+        <td th:text="${ticket.status}"></td>
+        <td>
+            <a th:href="@{/tickets/{id}(id=${ticket.id})}">Visa</a>
+        </td>
+    </tr>
+</table>
+
+<form th:action="@{/logout}" method="post">
+    <button type="submit">Logga ut</button>
+</form>
+
+</body>
+</html>
+
+

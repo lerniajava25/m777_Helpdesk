@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nytt ärende</title>
+</head>
+<body>
+
+<h1>Skapa nytt ärende</h1>
+
+<form th:action="@{/tickets}" method="post">
+
+    <label for="title">Titel:</label>
+    <input type="text" id="title" name="title" required maxlength="255">
+
+    <br><br>
+
+    <label for="description">Beskrivning:</label>
+    <textarea id="description" name="description"
+              required maxlength="2000"></textarea>
+
+    <br><br>
+
+    <button type="submit">Skapa ärende</button>
+</form>
+
+<p><a th:href="@{/tickets}">Tillbaka till ärenden</a></p>
+
+</body>
+</html>
+
+
+
+

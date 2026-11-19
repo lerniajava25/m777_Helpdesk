@@ -1,0 +1,48 @@
+
+
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ärendedetaljer</title>
+</head>
+<body>
+
+<h1 th:text="${ticket.title}">Ärende</h1>
+
+<p>
+    <strong>ID:</strong>
+    <span th:text="${ticket.id}"></span>
+</p>
+
+<p>
+    <strong>Beskrivning:</strong>
+    <span th:text="${ticket.description}"></span>
+</p>
+
+<p>
+    <strong>Status:</strong>
+    <span th:text="${ticket.status}"></span>
+</p>
+
+<p>
+    <strong>Skapad av:</strong>
+    <span th:text="${ticket.createdBy.username}"></span>
+</p>
+
+<p>
+    <strong>Tilldelad till:</strong>
+    <span th:text="${ticket.assignedTo != null ? ticket.assignedTo.username : 'Ingen ännu'}"></span>
+</p>
+
+<p><a th:href="@{/tickets}">Tillbaka till ärenden</a></p>
+
+</body>
+</html>
+
+
+
+
+
+
+
