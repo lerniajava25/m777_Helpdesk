@@ -21,6 +21,7 @@ public class DataInitializer {
 
         return args -> {
             createUser(userRepository, passwordEncoder, "user", password, Role.USER);
+            createUser(userRepository, passwordEncoder, "user2", password, Role.USER);
             createUser(userRepository, passwordEncoder, "agent", password, Role.AGENT);
         };
     }

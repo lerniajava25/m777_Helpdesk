@@ -61,6 +61,12 @@ public class TicketService {
     }
 
     public void createTicket(String title, String description, String username) {
+
+        if (title == null || title.isBlank() || title.length() > 255 ||
+                description == null || description.isBlank() || description.length() > 2000) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
         User user = getUser(username);
 
         Ticket ticket = new Ticket();
