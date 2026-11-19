@@ -12,16 +12,22 @@ import se.m777.helpdesk.repository.UserRepository;
 
 import java.util.List;
 
+import se.m777.helpdesk.entity.Comment;
+import se.m777.helpdesk.repository.CommentRepository;
+
 @Service
 public class TicketService {
 
     private final TicketRepository ticketRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
     public TicketService(TicketRepository ticketRepository,
-                         UserRepository userRepository) {
+                         UserRepository userRepository,
+                         CommentRepository commentRepository) {
         this.ticketRepository = ticketRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     public User getUser(String username) {
@@ -63,6 +69,29 @@ public class TicketService {
 
         ticketRepository.save(ticket);
     }
+
+    public List<Comment> getComments(Long ticketId, String username) {
+        getTicket(ticketId, username);
+
+        return commentRepository.findByTicketIdOrderByCreatedAtAsc(ticketId);
+    }
+
+    public void addComment(Long ticketId, String content, String username) {
+        Ticket ticket = getTicket(ticketId, username);
+        User user = getUser(username);
+
+        if (content == null || content.isBlank() || content.length() > 2000) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Comment comment = new Comment();
+        comment.setContent(content);
+        comment.setTicket(ticket);
+        comment.setUser(user);
+
+        commentRepository.save(comment);
+    }
+
 }
 
 

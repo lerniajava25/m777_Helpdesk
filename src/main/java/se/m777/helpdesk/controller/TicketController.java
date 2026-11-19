@@ -48,6 +48,7 @@ public class TicketController {
         return "redirect:/tickets";
     }
 
+
     @GetMapping("/tickets/{id}")
     public String ticketDetails(@PathVariable Long id,
                                 Model model,
@@ -56,8 +57,23 @@ public class TicketController {
         model.addAttribute("ticket",
                 ticketService.getTicket(id, principal.getName()));
 
+        model.addAttribute("comments",
+                ticketService.getComments(id, principal.getName()));
+
         return "tickets/details";
     }
+
+
+    @PostMapping("/tickets/{id}/comments")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam String content,
+                             Principal principal) {
+
+        ticketService.addComment(id, content, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
 }
 
 

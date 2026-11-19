@@ -35,6 +35,40 @@
     <span th:text="${ticket.assignedTo != null ? ticket.assignedTo.username : 'Ingen ännu'}"></span>
 </p>
 
+
+<hr>
+
+<h2>Kommentarer</h2>
+
+<p th:if="${#lists.isEmpty(comments)}">
+    Inga kommentarer ännu.
+</p>
+
+<div th:each="comment : ${comments}">
+    <p>
+        <strong th:text="${comment.user.username}"></strong>
+        skrev:
+    </p>
+
+    <p th:text="${comment.content}"></p>
+    <hr>
+</div>
+
+<h3>Skriv en kommentar</h3>
+
+<form th:action="@{/tickets/{id}/comments(id=${ticket.id})}"
+      method="post">
+
+    <textarea name="content"
+              required
+              maxlength="2000"></textarea>
+
+    <br><br>
+
+    <button type="submit">Skicka kommentar</button>
+</form>
+
+
 <p><a th:href="@{/tickets}">Tillbaka till ärenden</a></p>
 
 </body>
