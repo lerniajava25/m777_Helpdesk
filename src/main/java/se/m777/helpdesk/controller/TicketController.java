@@ -1,0 +1,109 @@
+
+package se.m777.helpdesk.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import se.m777.helpdesk.service.TicketService;
+
+import java.security.Principal;
+
+import se.m777.helpdesk.entity.TicketStatus;
+import se.m777.helpdesk.entity.Role;
+
+@Controller
+public class TicketController {
+
+    private final TicketService ticketService;
+
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/tickets";
+    }
+
+    @GetMapping("/tickets")
+    public String listTickets(Model model, Principal principal) {
+        model.addAttribute("tickets",
+                ticketService.getTickets(principal.getName()));
+
+        return "tickets/list";
+    }
+
+    @GetMapping("/tickets/new")
+    public String newTicket() {
+        return "tickets/new";
+    }
+
+    @PostMapping("/tickets")
+    public String createTicket(@RequestParam String title,
+                               @RequestParam String description,
+                               Principal principal) {
+
+        ticketService.createTicket(title, description, principal.getName());
+
+        return "redirect:/tickets";
+    }
+
+
+    @GetMapping("/tickets/{id}")
+    public String ticketDetails(@PathVariable Long id,
+                                Model model,
+                                Principal principal) {
+
+        model.addAttribute("ticket",
+                ticketService.getTicket(id, principal.getName()));
+
+        model.addAttribute("comments",
+                ticketService.getComments(id, principal.getName()));
+
+        model.addAttribute("isAgent",
+                ticketService.getUser(principal.getName()).getRole() != Role.USER);
+
+        return "tickets/details";
+    }
+
+
+    @PostMapping("/tickets/{id}/comments")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam String content,
+                             Principal principal) {
+
+        ticketService.addComment(id, content, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
+
+    @PostMapping("/agent/tickets/{id}/assign")
+    public String assignTicket(@PathVariable Long id,
+                               Principal principal) {
+
+        ticketService.assignTicket(id, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
+    @PostMapping("/agent/tickets/{id}/status")
+    public String updateStatus(@PathVariable Long id,
+                               @RequestParam TicketStatus status,
+                               Principal principal) {
+
+        ticketService.updateStatus(id, status, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
+
+}
+
+
+
+
+

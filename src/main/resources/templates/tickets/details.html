@@ -1,0 +1,112 @@
+
+
+<!DOCTYPE html>
+<html lang="sv" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ärendedetaljer</title>
+</head>
+<body>
+
+<h1 th:text="${ticket.title}">Ärende</h1>
+
+<p>
+    <strong>ID:</strong>
+    <span th:text="${ticket.id}"></span>
+</p>
+
+<p>
+    <strong>Beskrivning:</strong>
+    <span th:text="${ticket.description}"></span>
+</p>
+
+<p>
+    <strong>Status:</strong>
+    <span th:text="${ticket.status}"></span>
+</p>
+
+<p>
+    <strong>Skapad av:</strong>
+    <span th:text="${ticket.createdBy.username}"></span>
+</p>
+
+<p>
+    <strong>Tilldelad till:</strong>
+    <span th:text="${ticket.assignedTo != null ? ticket.assignedTo.username : 'Ingen ännu'}"></span>
+</p>
+
+
+<hr>
+
+
+<div th:if="${isAgent}">
+
+    <hr>
+    <h2>Hantera ärende</h2>
+
+    <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}"
+          method="post">
+        <button type="submit">Tilldela mig ärendet</button>
+    </form>
+
+    <h3>Ändra status</h3>
+
+    <form th:action="@{/agent/tickets/{id}/status(id=${ticket.id})}"
+          method="post">
+
+        <select name="status">
+            <option value="NEW">Nytt</option>
+            <option value="IN_PROGRESS">Pågående</option>
+            <option value="WAITING_FOR_USER">Väntar på användare</option>
+            <option value="RESOLVED">Löst</option>
+            <option value="CLOSED">Stängt</option>
+        </select>
+
+        <button type="submit">Uppdatera status</button>
+    </form>
+
+</div>
+
+
+<h2>Kommentarer</h2>
+
+<p th:if="${#lists.isEmpty(comments)}">
+    Inga kommentarer ännu.
+</p>
+
+<div th:each="comment : ${comments}">
+    <p>
+        <strong th:text="${comment.user.username}"></strong>
+        skrev:
+    </p>
+
+    <p th:text="${comment.content}"></p>
+    <hr>
+</div>
+
+<h3>Skriv en kommentar</h3>
+
+<form th:action="@{/tickets/{id}/comments(id=${ticket.id})}"
+      method="post">
+
+    <textarea name="content"
+              required
+              maxlength="2000"></textarea>
+
+    <br><br>
+
+    <button type="submit">Skicka kommentar</button>
+</form>
+
+
+<p><a th:href="@{/tickets}">Tillbaka till ärenden</a></p>
+
+</body>
+</html>
+
+
+
+
+
+
+
