@@ -11,6 +11,9 @@ import se.m777.helpdesk.service.TicketService;
 
 import java.security.Principal;
 
+import se.m777.helpdesk.entity.TicketStatus;
+import se.m777.helpdesk.entity.Role;
+
 @Controller
 public class TicketController {
 
@@ -60,6 +63,9 @@ public class TicketController {
         model.addAttribute("comments",
                 ticketService.getComments(id, principal.getName()));
 
+        model.addAttribute("isAgent",
+                ticketService.getUser(principal.getName()).getRole() != Role.USER);
+
         return "tickets/details";
     }
 
@@ -73,6 +79,27 @@ public class TicketController {
 
         return "redirect:/tickets/" + id;
     }
+
+
+    @PostMapping("/agent/tickets/{id}/assign")
+    public String assignTicket(@PathVariable Long id,
+                               Principal principal) {
+
+        ticketService.assignTicket(id, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
+    @PostMapping("/agent/tickets/{id}/status")
+    public String updateStatus(@PathVariable Long id,
+                               @RequestParam TicketStatus status,
+                               Principal principal) {
+
+        ticketService.updateStatus(id, status, principal.getName());
+
+        return "redirect:/tickets/" + id;
+    }
+
 
 }
 

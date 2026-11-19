@@ -14,6 +14,7 @@ import java.util.List;
 
 import se.m777.helpdesk.entity.Comment;
 import se.m777.helpdesk.repository.CommentRepository;
+import se.m777.helpdesk.entity.TicketStatus;
 
 @Service
 public class TicketService {
@@ -91,6 +92,34 @@ public class TicketService {
 
         commentRepository.save(comment);
     }
+
+
+    public void assignTicket(Long ticketId, String username) {
+        User user = getUser(username);
+
+        if (user.getRole() != Role.AGENT && user.getRole() != Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        Ticket ticket = getTicket(ticketId, username);
+        ticket.setAssignedTo(user);
+
+        ticketRepository.save(ticket);
+    }
+
+    public void updateStatus(Long ticketId, TicketStatus status, String username) {
+        User user = getUser(username);
+
+        if (user.getRole() != Role.AGENT && user.getRole() != Role.ADMIN) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+        }
+
+        Ticket ticket = getTicket(ticketId, username);
+        ticket.setStatus(status);
+
+        ticketRepository.save(ticket);
+    }
+
 
 }
 

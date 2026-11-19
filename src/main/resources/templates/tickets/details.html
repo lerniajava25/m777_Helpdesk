@@ -38,6 +38,36 @@
 
 <hr>
 
+
+<div th:if="${isAgent}">
+
+    <hr>
+    <h2>Hantera ärende</h2>
+
+    <form th:action="@{/agent/tickets/{id}/assign(id=${ticket.id})}"
+          method="post">
+        <button type="submit">Tilldela mig ärendet</button>
+    </form>
+
+    <h3>Ändra status</h3>
+
+    <form th:action="@{/agent/tickets/{id}/status(id=${ticket.id})}"
+          method="post">
+
+        <select name="status">
+            <option value="NEW">Nytt</option>
+            <option value="IN_PROGRESS">Pågående</option>
+            <option value="WAITING_FOR_USER">Väntar på användare</option>
+            <option value="RESOLVED">Löst</option>
+            <option value="CLOSED">Stängt</option>
+        </select>
+
+        <button type="submit">Uppdatera status</button>
+    </form>
+
+</div>
+
+
 <h2>Kommentarer</h2>
 
 <p th:if="${#lists.isEmpty(comments)}">
